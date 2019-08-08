@@ -12,6 +12,8 @@ module.exports = {
             return res.status(400).json({ error: 'Dev not exists'});
         }
 
+        console.log(`${loggedDev.name} deu dislike em ${targetDev.name}`);
+
         loggedDev.dislikes.push(targetDev._id);
 
         await loggedDev.save();

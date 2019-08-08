@@ -3,6 +3,13 @@ const Dev = require('../models/Dev');
 
 module.exports = {
 
+
+    async list(req, res) {
+       const users = await Dev.find();
+       console.log('Pegando todos os usuários');
+       return res.json(users);
+    },
+
     async index(req, res) {
         const { user } = req.headers;
 
@@ -15,6 +22,8 @@ module.exports = {
                 { _id: { $nin: loggedDev.dislikes } },
             ],
         });
+
+        console.log(`${loggedDev.name} possui ${users.length} usuários encontrados`);
         
         return res.json(users);
     },
@@ -25,8 +34,10 @@ module.exports = {
         const userExists = await Dev.findOne({ user: username});
 
         if(userExists) {
+            console.log(`${username} já existe. Id: ${userExists._id}`);
             return res.json(userExists);
         }
+        
 
         const response = await axios.get(`https://api.github.com/users/${username}`);
 
@@ -37,7 +48,8 @@ module.exports = {
             user: username,
             bio,
             avatar,
-        })
+        });
+        console.log(`${username} criado`);
 
         return res.json(dev);
     }

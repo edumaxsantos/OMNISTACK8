@@ -2,19 +2,18 @@ const Dev = require('../models/Dev');
 
 module.exports = {
     async store(req, res) {
+        
         const { user } = req.headers;
         const { devId } = req.params;
-
-        console.time('Encontrar devs');
 
         const loggedDev = await Dev.findById(user);
         const targetDev = await Dev.findById(devId);
 
-        console.timeEnd('Encontrar devs');
-
         if(!targetDev) {
             return res.status(400).json({ error: 'Dev not exists'});
         }
+
+        console.log(`${loggedDev.name} deu like em ${targetDev.name}`);
 
         if(targetDev.likes.includes(loggedDev._id)) {
             console.log('DEU MATCH');
